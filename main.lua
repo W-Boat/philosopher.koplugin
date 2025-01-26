@@ -1,16 +1,11 @@
---[[
-    Philosopher For KOReader
-    Version: V0.0.3
-    Another: cxzx150133
-    License: GPL v3
---]]
 local _               = require("gettext")
 local UIManager       = require("ui/uimanager")
 local InfoMessage     = require("ui/widget/infomessage")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
+local json            = require("json")
 
 ---------------------------------------------------------------------------------------
-local TXT_File_Path   = "/mnt/onboard/.adds/koreader/plugins/philosopher.koplugin/data.txt"
+local JSON_File_Path  = "/mnt/onboard/.adds/koreader/plugins/philosopher.koplugin/data.json"
 ---------------------------------------------------------------------------------------
 local Philosopher = WidgetContainer:new {
     name = 'philosopher',
@@ -26,7 +21,7 @@ function Philosopher:addToMainMenu(menu_items)
         callback = function()
             UIManager:show(InfoMessage:new{
                 text = _(
-                    self:GetRandomLineFromTXT(TXT_File_Path)
+                    self:GetRandomEntryFromJSON(JSON_File_Path)
                 ),
                 show_icon = false,
             })
@@ -35,98 +30,82 @@ function Philosopher:addToMainMenu(menu_items)
             UIManager:show(InfoMessage:new{
                 text = _(
                     "<About/>\n"..
-                    "Philosopher for KOReader\n"..
-                    "Version: V0.0.3\n"..
-                    "Another: cxzx150133\n"..
+                    "Philosopher for KOReader（json Version）\n"..
+                    "Version: V0.1.1\n"..
+                    "Another: cxzx150133,whiteboat\n"..
                     "License: GPL v3"
                 ),
             })
         end
     }
 end
+
 ---------------------------------------------------------------------------------------
-function Philosopher:GetTotalNumberOfLine(file_path)
-    local file = io.open(file_path,"r")
-    if file == nil then
-        return -1
-    end
-
-    local n = 0
-    for line in file:lines() do
-        n = n + 1
-    end
-    file:close()
-
-    return n
-end
-
-function Philosopher:IsRightNumberOfLine(LineNumber)
-    if type(LineNumber) ~= "number" then
-        LineNumber = tonumber(LineNumber)
-    end
-
-    if tonumber(string.format("%.f",LineNumber)) ~= LineNumber then
-        return false
-    elseif not (LineNumber>0) then
-        return false
-    end
-
-  return true
-end
-  
-function Philosopher:GetContentOfSpecifiedLine(file_path,LineNumber,TotalNumberLine)
-    if file_path == nil then
-        return "Error:Please set the file path."
-    elseif  LineNumber == nil then
-        return "Error:Please set the line number."
-    elseif self:IsRightNumberOfLine(LineNumber) == false then
-        return "Error:Please check the line number."
-    elseif TotalNumberLine == nil then
-        TotalNumberLine = self:GetTotalNumberOfLine(file_path)
-    end
-
-    if LineNumber > TotalNumberLine then
-        return "Error:The line number cannot be greater than the total number of lines."
-    elseif TotalNumberLine == -1 then
-        return "Error:File path does not exist."
-    end
-
-    local file = io.open(file_path,"r")
-    if file == nil then
-        return "Error:File path does not exist."
-    end
+function Philosopher:GetRandomEntryFromJSON(json_path)
+    local file = io.open(json_path, "r")
+    if not file then return "Error: File not found" end
     
-    local n = 0
-    for line in file:lines() do
-        n = n + 1
-        if n == LineNumber then
-          return line
-        end
-    end
+    local content = file:read("*a")
     file:close()
-    return "Error:The total number of rows is set incorrectly.\n" .. 
-           "If you are not sure how many rows, please do not fill in this parameter, the program will automatically detect."
-end
-
-function Philosopher:GetOneLineAtRandom(file_path,TotalNumberLine)
-    if file_path == nil then
-        return "Error:Please set the file path."
-    elseif TotalNumberLine == nil then
-        TotalNumberLine = self:GetTotalNumberOfLine(file_path)
-    end
-
-    if TotalNumberLine == -1 then
-        return "Error:File path does not exist."
-    end
+    
+    local ok, data = pcall(json.decode, content)
+    if not ok or type(data) ~= "table" then return "Error: Invalid JSON format" end
+    if #data == 0 then return "Error: Empty dataset" end
     
     math.randomseed(os.time())
-    local NumberLine = math.random(TotalNumberLine) -- [1,LineNumber]
-    return self:GetContentOfSpecifiedLine(file_path,NumberLine,TotalNumberLine),line
-end
----------------------------------------------------------------------------------------
-function Philosopher:GetRandomLineFromTXT(TXT_FILE_PATH)
-    return_str = self:GetOneLineAtRandom(TXT_FILE_PATH)
-    return return_str
+    local entry = data[math.random(#data)]
+    
+    -- 增强型安全处理函数
+    local function safe_value(v)
+        -- 类型安全检查
+        if type(v) == "function" then
+            return ""
+        end
+        
+        -- 处理标准null值
+        if v == nil then
+            return ""
+        end
+        
+        -- 处理JSON库的null表示
+        if json.null and v == json.null then
+            return ""
+        elseif json.is_null and json.is_null(v) then
+            return ""
+        end
+        
+        -- 处理userdata类型的null
+        if type(v) == "userdata" then
+            local str = tostring(v):lower()
+            if str:find("null") then
+                return ""
+            end
+        end
+        
+        -- 最终转换为净化后的字符串
+        return tostring(v):gsub("^%s+", ""):gsub("%s+$", "")
+    end
+    
+    local hitokoto = safe_value(entry.hitokoto) or ""
+    local from = safe_value(entry.from) or ""
+    local from_who = safe_value(entry.from_who) or ""
+    
+    -- 构建来源信息
+    local source = ""
+    if from ~= "" then
+        source = "来源自 " .. from
+        if from_who ~= "" then
+            source = source .. "（" .. from_who .. "）"
+        end
+    end
+    
+    -- 最终拼接处理
+    local final_text = hitokoto
+    if source ~= "" then
+        final_text = final_text .. "\n" .. source
+    end
+    
+    return final_text
 end
 
 return Philosopher
