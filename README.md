@@ -14,11 +14,11 @@ Above is the hitokoto library, from which you can download the latest sentences.
 
 这是一个针对 KOReader 的插件，实现在移动设备上随机显示来自 json 文件的文本。
 
-其效果类似于 hitokoto（一言），随机显示句子和来源。其数据来自于也来自 hitokoto。不过，这个插件专为 KOReader 设计。
+其效果类似于 hitokoto（一言），随机显示句子和来源。其数据也来自 hitokoto。不过，这个插件专为 KOReader 设计。
 
-如果你想自定义输出的句子，可以修改 data.json 文件的内容。
+*如果你想自定义输出的句子，可以修改 data.json 文件的内容。
 
-这个插件的默认目录适用于 kobo 设备，你可以自行修改以适配你的设备。
+*重要：这个插件的默认目录适用于 kobo 设备，你可以自行修改以适配你的设备。
 
 提示： https://github.com/hitokoto-osc/sentences-bundle/ 
 
