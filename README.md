@@ -1,5 +1,6 @@
 # philosopher.koplugin
 
+## English 
 This is a plugin for KOReader that displays random text from a json file on mobile devices.
 
 It works similarly to hitokoto (一言), randomly showing sentences and their sources. The data is sourced from hitokoto as well. However, this plugin is specifically designed for KOReader.
@@ -12,6 +13,7 @@ Tip: https://github.com/hitokoto-osc/sentences-bundle/
 
 Above is the hitokoto library, from which you can download the latest sentences. Copy the merge_json.py file into the sentences folder you downloaded, then run merge_json.py on your PC. Follow the prompts and place the final generated file in the plugin folder (it's just merging files). You can choose a few categories you like and delete the rest before running the script (I can't add category selection, so it's done this way). If the data.json file is too large, it may cause lag.
 
+## 中文
 这是一个针对 KOReader 的插件，实现在移动设备上随机显示来自 json 文件的文本。
 
 其效果类似于 hitokoto（一言），随机显示句子和来源。其数据也来自 hitokoto。不过，这个插件专为 KOReader 设计。
