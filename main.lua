@@ -93,7 +93,7 @@ function Philosopher:GetRandomEntryFromJSON(json_path)
     -- 构建来源信息
     local source = ""
     if from ~= "" then
-        source = "来源自 " .. from
+        source = "来源自 - 「" .. from .. "」"
         if from_who ~= "" then
             source = source .. "（" .. from_who .. "）"
         end
