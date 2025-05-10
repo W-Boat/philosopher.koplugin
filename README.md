@@ -1,22 +1,26 @@
 # philosopher.koplugin
 
-This is a plug-in for the KOReader that implements a random display of text from the TXT file.
+## English 
+This is a plugin for KOReader that displays random text from a json file on mobile devices.
 
-The effect is similar to `hitokoto`([一言](http://hitokoto.cn/)),Print a random display of philosophical sentences,But it's a mobile app and this plug-in is for KOReader.
+It works similarly to hitokoto (一言), randomly showing sentences and their sources. The data is sourced from hitokoto as well. However, this plugin is specifically designed for KOReader.
 
-If you want to customize the output sentence, you can modify the contents of the **data.txt** file directly or modify the **TXT_File_Path** variable in the code to respecify the file path.
+If you want to customize the displayed sentences, you can modify the contents of the data.json file.
 
-Default file path in line 13:
-```lua
-local TXT_File_Path   = "/mnt/onboard/.adds/koreader/plugins/philosopher.koplugin/data.txt"
-```
+## 中文
+这是一个针对 KOReader 的插件，实现在移动设备上随机显示来自 json 文件的文本。
+
+其效果类似于 hitokoto（一言），随机显示句子和来源。其数据也来自 hitokoto。不过，这个插件专为 KOReader 设计。
+
+提示： https://github.com/hitokoto-osc/sentences-bundle/ 
+
+以上是一言库，你可以从中下载最新一言。使用 /tools 将它们转化为适合本插件的 json！
 
 ## Supported formats
 
 |   formats    |    date   |
 |:------------:|:---------:|
-|&#x2611; txt  | 2018/1/29 |
-|&#x2610; json |  pending  |
+|&#x2611; json  | 2025/01/26 |
 
 ## License
 GPL v3
