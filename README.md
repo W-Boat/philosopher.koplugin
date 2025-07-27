@@ -9,7 +9,7 @@ If you want to customize the displayed sentences, you can modify the contents of
 
 ## 中文
 这是一个针对 KOReader 的插件，实现在移动设备上随机显示来自 json 文件的文本。
-
+支持手势管理。
 其效果类似于 hitokoto（一言），随机显示句子和来源。其数据也来自 hitokoto。不过，这个插件专为 KOReader 设计。
 
 提示： https://github.com/hitokoto-osc/sentences-bundle/ 
